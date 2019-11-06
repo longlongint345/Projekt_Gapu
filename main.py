@@ -16,9 +16,9 @@ hiir = pg.mouse.get_pos()
 klick = False
 
 start_screen = True
-algope = False
-edasijoudnute = False
-lopmatu = False
+algope_screen = False
+edasijoudnute_screen = False
+lopmatu_screen = False
 
 # Main loop
 while True:
@@ -34,20 +34,21 @@ while True:
         klick = True
 
     # Mis hetkel toimub
-
     if start_screen:  # algusekraan
         start_screen = start.screen(aken, akenx, hiir, klick)
         if start.vajutus == "alg":
-            algope = True
+            algope_screen = True
         elif start.vajutus == "edasi":
-            edasijoudnute = True
+            edasijoudnute_screen = True
         elif start.vajutus == "lopmatu":
-            lopmatu = True
-    elif algope:  # algõppe moodul
+            lopmatu_screen = True
+    if algope_screen:  # algõppe moodul
+        algope_screen = algope.kuva(aken, akenx, akeny, hiir, klick)
+        if algope.vajutus == "start":
+            start_screen = True
+    if edasijoudnute_screen:  # edasijõudnute moodul
         pass
-    elif edasijoudnute:  # edasijõudnute moodul
-        pass
-    elif lopmatu:  # lõpmatu režiimi moodul
+    if lopmatu_screen:  # lõpmatu režiimi moodul
         pass
 
     # ------------------------------------------------------------

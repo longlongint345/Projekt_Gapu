@@ -6,6 +6,8 @@ vajutus = ""
 
 
 def screen(win, wx, hiir, klikk):
+    global vajutus
+    vajutus = ""
     wel_img = pg.image.load(os.path.join("img", "Microsoft_Keyboard.jpg"))
     win.blit(wel_img, (0, 0))
 

@@ -34,7 +34,18 @@ class nupp():
         return False
 
 
-class menu():
-    def __init__(self, ridade_arv):
-        self.r_arv = ridade_arv
-        self.laius = 150
+class tekstikast:
+    def __init__(self, x, y, laius, korgus):
+        self.x = x
+        self.y = y
+        self.laius = laius
+        self.korgus = korgus
+        self.aarise_paksus = 3
+        self.varv = (255, 255, 255)
+        self.aarise_varv = (0, 0, 0)
+
+    def draw(self, win):
+        pg.draw.rect(win, self.aarise_varv, (
+        self.x - self.aarise_paksus, self.y - self.aarise_paksus, self.laius + self.aarise_paksus * 2,
+        self.korgus + self.aarise_paksus * 2))
+        pg.draw.rect(win, self.varv, (self.x, self.y, self.laius, self.korgus))
