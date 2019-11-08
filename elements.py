@@ -46,6 +46,27 @@ class tekstikast:
 
     def draw(self, win):
         pg.draw.rect(win, self.aarise_varv, (
-        self.x - self.aarise_paksus, self.y - self.aarise_paksus, self.laius + self.aarise_paksus * 2,
-        self.korgus + self.aarise_paksus * 2))
+            self.x - self.aarise_paksus, self.y - self.aarise_paksus, self.laius + self.aarise_paksus * 2,
+            self.korgus + self.aarise_paksus * 2))
         pg.draw.rect(win, self.varv, (self.x, self.y, self.laius, self.korgus))
+
+    def kuva_tekst(self, win, tekst, varv=(0, 0, 0)):  # praegu peab jälgima, et tekst kasti y-sihis ära mahuks
+        font = pg.font.SysFont("Arial", 20)
+        lst = tekst.split(" ")
+        tekstirea_pikkus = 0
+        tekstirida = ""
+        rida = 0
+
+        while len(lst) != 0:
+            tekstirea_pikkus += font.size(lst[0])[0]
+            while tekstirea_pikkus <= self.laius - 20:
+                tekstirida += (lst[0] + " ")
+                lst.remove(lst[0])
+                if len(lst) == 0:
+                    break
+                tekstirea_pikkus += font.size(lst[0] + " ")[0]
+
+            win.blit(font.render(tekstirida, True, varv), (self.x + 10, self.y + rida * font.size(tekstirida)[1] + 15))
+            tekstirida = ""
+            tekstirea_pikkus = 0
+            rida += 1

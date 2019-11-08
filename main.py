@@ -14,6 +14,7 @@ aken = pg.display.set_mode((akenx, akeny))
 pg.display.set_caption("Projekt Gapu")
 hiir = pg.mouse.get_pos()
 klick = False
+klahv = ""
 
 start_screen = True
 algope_screen = False
@@ -23,15 +24,23 @@ lopmatu_screen = False
 # Main loop
 while True:
     # ------------------------------------------------------------
-
     # Sündmused
-    e = pg.event.wait()
+    if algope_screen:
+        e = pg.event.poll()
+        if e.type == pg.NOEVENT:
+            pg.time.wait(30)  # vajalik animatsiooni toimimiseks
+    else:
+        e = pg.event.wait()
+
+
     if e.type == pg.QUIT:
         break
     if e.type == pg.MOUSEMOTION:
         hiir = pg.mouse.get_pos()
     if e.type == pg.MOUSEBUTTONDOWN:
         klick = True
+    if e.type == pg.KEYDOWN:
+        klahv = e.unicode
 
     # Mis hetkel toimub
     if start_screen:  # algusekraan
@@ -43,7 +52,7 @@ while True:
         elif start.vajutus == "lopmatu":
             lopmatu_screen = True
     if algope_screen:  # algõppe moodul
-        algope_screen = algope.kuva(aken, akenx, akeny, hiir, klick)
+        algope_screen = algope.kuva(aken, akenx, akeny, hiir, klick, klahv)
         if algope.vajutus == "start":
             start_screen = True
     if edasijoudnute_screen:  # edasijõudnute moodul
@@ -53,6 +62,7 @@ while True:
 
     # ------------------------------------------------------------
     klick = False
+    klahv = ""
     pg.display.update()
 
 pg.quit()
