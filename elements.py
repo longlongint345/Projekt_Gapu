@@ -35,13 +35,13 @@ class nupp():
 
 
 class tekstikast:
-    def __init__(self, x, y, laius, korgus):
+    def __init__(self, x, y, laius, korgus, varv=(255, 255, 255)):
         self.x = x
         self.y = y
         self.laius = laius
         self.korgus = korgus
         self.aarise_paksus = 3
-        self.varv = (255, 255, 255)
+        self.varv = varv
         self.aarise_varv = (0, 0, 0)
 
     def draw(self, win):

@@ -7,7 +7,7 @@ vajutus = ""
 kirjutatud_tekst = ""
 kirjutamise_jarg = -1
 counter = 0
-
+viga = False
 
 
 # tagastab igale tähele vastava pildi nime
@@ -43,34 +43,91 @@ def file_to_string(pathtofnimi):
     return sone
 
 
+def klahvi_asukoht(k):
+    moot = 60
+    algx = 410
+    algy = 526
+    k = k.lower()
+    rida0 = "1234567890+"
+    rida01 = "!\"#¤%&/()=?"
+    rida02 = "¹@£$½¬{[]}\\"
+    rida1 = "qwertyuiopüõ"
+    rida2 = "asdfghjklöä'"
+    rida3 = "<zxcvbnm,.-"
+    erandid = "€šž>|;:_ "
+    if k in rida0:
+        return ((rida0.index(k) * moot + algx, algy))
+    elif k in rida01:
+        return ((rida01.index(k) * moot + algx, algy))
+    elif k in rida02:
+        return ((rida02.index(k) * moot + algx, algy))
+    elif k in rida1:
+        algy += moot
+        algx = (algx + (algx + moot)) / 2
+        return ((rida1.index(k) * moot + algx, algy))
+    elif k in rida2:
+        algy += (2 * moot)
+        algx = (((algx + (algx + moot)) / 2) + (algx + moot)) / 2
+        return ((rida2.index(k) * moot + algx, algy))
+    elif k in rida3:
+        algy += (3 * moot)
+        algx = ((((algx + (algx + moot)) / 2) + (algx + moot)) / 2) - (moot / 2)
+        return ((rida3.index(k) * moot + algx, algy))
+    elif k in erandid:  # NB! erandid
+        if k == " ":
+            return (590, 766)
+    else:
+        raise Exception("Ei leia tähte andmebaasist.")
+
+
 def kuva(win, wx, wy, hiir, klikk, klahv):
     global vajutus
     global kirjutatud_tekst
     global kirjutamise_jarg
     global counter
     global liikumine
+    global viga
     vajutus = ""
+
     tekst = file_to_string(os.path.join("data", "test.txt"))
+    jargmine_taht = tekst[kirjutamise_jarg + 1]  # NB! et teksti lõpus listist välja ei läheks
+
     win.fill((255, 255, 255))
     klaius = 900
     kpikkus = 400
     kast1 = tekstikast(wx / 2 - klaius / 2, 50, klaius, kpikkus)
+    if viga:
+        kast1.aarise_varv = (255, 0, 0)
     kast1.draw(win)
     kast1.kuva_tekst(win, tekst)
 
-    kpikkus = 150
-    kast2 = tekstikast(wx / 2 - klaius / 2, wy - kpikkus - 150, klaius, kpikkus)
+    nihe_nurgast = 75
+    kpikkus = 300
+    kast2 = tekstikast(wx / 2 - klaius / 2 - 10, wy - kpikkus - 10 - nihe_nurgast, klaius + 20, kpikkus + 20)
     kast2.draw(win)
 
     # pildid
-    plaius = 100  # suhe peab olema 5:8
-    pkorgus = 160
-    nihe_nurgast = 75
+    plaius = 125  # suhe peab olema 5:8
+    pkorgus = 200
     parem = pg.transform.scale(pg.image.load(os.path.join("img", "parem.png")), (plaius, pkorgus))
     vasak = pg.transform.scale(pg.image.load(os.path.join("img", "vasak.png")), (plaius, pkorgus))
+    klaviatuur = pg.transform.scale(pg.image.load(os.path.join("img", "Estonian.png")), (900, 300))
 
     win.blit(vasak, (nihe_nurgast, wy - pkorgus - nihe_nurgast))
     win.blit(parem, (wx - plaius - nihe_nurgast, wy - pkorgus - nihe_nurgast))
+    win.blit(klaviatuur, (wx / 2 - 900 / 2, wy - 300 - nihe_nurgast))
+
+    # helendavate (läbipaistvus) klahvide kujutamine
+    if jargmine_taht != " ":
+        pind = pg.Surface((60, 60))
+        pind.set_alpha(150)
+        pind.fill((255, 255, 0))
+        win.blit(pind, (klahvi_asukoht(jargmine_taht)[0], klahvi_asukoht(jargmine_taht)[1]))
+    elif jargmine_taht == " ":
+        pind = pg.Surface((6 * 60, 60))
+        pind.set_alpha(150)
+        pind.fill((255, 255, 0))
+        win.blit(pind, (klahvi_asukoht(jargmine_taht)[0], klahvi_asukoht(jargmine_taht)[1]))
 
     # nupud
     tagasi = nupp(0, 0, 100, 150, "Tagasi", (0, 0, 170), (255, 255, 255))
@@ -92,11 +149,12 @@ def kuva(win, wx, wy, hiir, klikk, klahv):
         if tekst[kirjutamise_jarg] != kirjutatud_tekst[kirjutamise_jarg]:
             kirjutamise_jarg -= 1
             kirjutatud_tekst = kirjutatud_tekst[:-1]
+            viga = True
+            counter = 0
             # kirjutamisveale saab reageerida siit
-    kast1.kuva_tekst(win, kirjutatud_tekst, (255, 0, 0))
+    kast1.kuva_tekst(win, kirjutatud_tekst, (0, 200, 0))
 
-    # animatsiooni kuvamine
-    jargmine_taht = tekst[kirjutamise_jarg + 1]  # NB! et teksti lõpus listist välja ei läheks
+    # animatsiooni(de) kuvamine
     anim = sorm(jargmine_taht)
     if counter <= 5:
         if anim[0] == 'p':
@@ -109,7 +167,7 @@ def kuva(win, wx, wy, hiir, klikk, klahv):
     elif counter <= 10:
         counter += 1
     else:
+        viga = False
         counter = 0
-
 
     return True
