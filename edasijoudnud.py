@@ -38,7 +38,7 @@ def edasijõudnud_main(win, wx, wy, hiir, klikk, klahv):
     kast1.draw(win)
     kast1.kuva_tekst(win, tekst)
 
-    # nupud
+    #nupud
     tagasi = nupp(0, 0, 100, 150, "Tagasi", (0, 0, 170), (255, 255, 255))
     if tagasi.hiire_all(hiir):
         tagasi.värv = (0, 0, 255)
@@ -59,7 +59,7 @@ def edasijõudnud_main(win, wx, wy, hiir, klikk, klahv):
             kirjutatud_tekst = kirjutatud_tekst[:-1]
             viga = True
             counter = 0
-            # kirjutamisveale saab reageerida siit
+            #kirjutamisveale saab reageerida siit
     kast1.kuva_tekst(win, kirjutatud_tekst, (0, 200, 0))
     
 

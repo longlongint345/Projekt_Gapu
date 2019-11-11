@@ -56,7 +56,7 @@ while True:
         if algope.vajutus == "start":
             start_screen = True
     if edasijoudnute_screen:  # edasijõudnute moodul
-        edasijoudnute_screen = edasijoudnud.edasi_main(aken, akenx, akeny, hiir, klick, klahv)
+        edasijoudnute_screen = edasijoudnud.edasijõudnud_main(aken, akenx, akeny, hiir, klick, klahv)
         if edasijoudnud.vajutus == "start":
             start_screen = True
     if lopmatu_screen:  # lõpmatu režiimi moodul
