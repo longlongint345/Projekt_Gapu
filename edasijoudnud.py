@@ -34,7 +34,7 @@ def edasijõudnud_main(win, wx, wy, hiir, klikk, klahv):
     kastipikkus = 500
     kast1 = tekstikast(wx / 2 - kastilaius / 2, 50, kastilaius, kastipikkus)
     if viga:
-        kast1.äärise_varv = (255, 0, 0)
+        kast1.aarise_varv = (255, 0, 0)
     kast1.draw(win)
     kast1.kuva_tekst(win, tekst)
 
@@ -42,7 +42,7 @@ def edasijõudnud_main(win, wx, wy, hiir, klikk, klahv):
     tagasi = nupp(0, 0, 100, 150, "Tagasi", (0, 0, 170), (255, 255, 255))
     if tagasi.hiire_all(hiir):
         tagasi.värv = (0, 0, 255)
-    tagasi.draw(win)
+        tagasi.draw(win)
     if tagasi.is_clicked(klikk, hiir):
         win.fill((0, 0, 0))
         vajutus = "start"
@@ -61,8 +61,6 @@ def edasijõudnud_main(win, wx, wy, hiir, klikk, klahv):
             counter = 0
             #kirjutamisveale saab reageerida siit
     kast1.kuva_tekst(win, kirjutatud_tekst, (0, 200, 0))
-    
-
 
     return True
 
