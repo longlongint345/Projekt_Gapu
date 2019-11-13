@@ -6,9 +6,7 @@ from elements import tekstikast
 vajutus = ""
 kirjutatud_tekst = ""
 kirjutamise_järg = -1
-counter = 0
 viga = False
-
 
 def file_to_string(failinimi):
     sõne = ""
@@ -40,15 +38,21 @@ def edasijõudnud_main(win, wx, wy, hiir, klikk, klahv):
 
     tagasi = nupp(0, 0, 100, 150, "Tagasi", (0, 0, 170), (255, 255, 255))
     if tagasi.hiire_all(hiir):
-        tagasi.värv = (0, 0, 255)
+        tagasi.varv = (255, 0, 140)
     tagasi.draw(win)
     if tagasi.is_clicked(klikk, hiir):
         win.fill((0, 0, 0))
         vajutus = "start"
         kirjutatud_tekst = ""
         kirjutamise_järg = -1
-        counter = 0
         return False
+    
+    nihe_nurgast = 75
+    pildilaius = 250
+    pildikõrgus = 250
+    taimer = pg.transform.scale(pg.image.load(os.path.join("img", "timer.png")), (pildilaius, pildikõrgus))
+
+    win.blit(taimer, (wx - pildilaius - nihe_nurgast, wy - pildikõrgus - nihe_nurgast))
 
     if klahv != "":
         kirjutatud_tekst += klahv
@@ -57,7 +61,8 @@ def edasijõudnud_main(win, wx, wy, hiir, klikk, klahv):
             kirjutamise_järg -= 1
             kirjutatud_tekst = kirjutatud_tekst[:-1]
             viga = True
-            counter = 0
+        else:
+            viga = False
     kast1.kuva_tekst(win, kirjutatud_tekst, (0, 200, 0))
 
     return True
