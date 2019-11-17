@@ -3,11 +3,19 @@ import os
 from elements import nupp
 from elements import tekstikast
 from algope import file_to_string
+import time
 
 vajutus = ""
 tippimiste_arv = 0
 viga = False
 kirjutatud_tekst = ""
+WPM = 0
+ainult_korra = True
+kell0 = 0
+kirjutatud_sonade_arv = 0
+aeg = 0.1
+vigade_arv = 0
+tekst = ""
 
 
 def lopmatu_main(win, winx, winy, hiir, klikk, klahv):
@@ -15,7 +23,19 @@ def lopmatu_main(win, winx, winy, hiir, klikk, klahv):
     global viga
     global tippimiste_arv
     global kirjutatud_tekst
-    vajutus = ""
+    global kirjutatud_sonade_arv
+    global vigade_arv
+    global WPM
+    global ainult_korra
+    global kell0
+    global aeg
+    global tekst
+    if ainult_korra:  # hiljem saab seda struktuuri kasutada koodi optimeerimiseks
+        kell0 = time.time()
+        tekst = file_to_string(os.path.join("data", "test.txt"))
+        vajutus = ""
+        ainult_korra = False
+
     win.blit(pg.image.load(os.path.join("img", "tahistaevas.jpg")), (0, 0))
 
     # nupud
@@ -23,11 +43,18 @@ def lopmatu_main(win, winx, winy, hiir, klikk, klahv):
     if tagasi.hiire_all(hiir):
         tagasi.varv = (0, 0, 255)
     tagasi.draw(win)
-    if tagasi.is_clicked(klikk, hiir):
+    if tagasi.is_clicked(klikk, hiir):  # + reset
         vajutus = "start"
         tippimiste_arv = 0
         kirjutatud_tekst = ""
         viga = False
+        ainult_korra = True
+        WPM = 0
+        kell0 = 0
+        kirjutatud_sonade_arv = 0
+        aeg = 0.1
+        vigade_arv = 0
+        tekst = ""
         return False
 
     # tekstikast
@@ -41,12 +68,12 @@ def lopmatu_main(win, winx, winy, hiir, klikk, klahv):
     riba0.draw(win)
     riba1.draw(win)
 
-    tekst = file_to_string(os.path.join("data", "test.txt"))
     font = pg.font.SysFont("Arial", 50)
     kuvatav_tekst = tekst[tippimiste_arv: tippimiste_arv + 28]
     if klahv != "":
         if klahv != kuvatav_tekst[0]:
             viga = True
+            vigade_arv += 1
         else:
             tippimiste_arv += 1
             kirjutatud_tekst += klahv
@@ -54,8 +81,31 @@ def lopmatu_main(win, winx, winy, hiir, klikk, klahv):
                 kirjutatud_tekst = kirjutatud_tekst[-28:]
             viga = False
 
+            # kirjutamise kiiruse mõõtmiseks
+            aeg = time.time() - kell0
+            if klahv == " ":
+                kirjutatud_sonade_arv += 1
+
     riba1.kuva_tekst(win, kuvatav_tekst, (0, 0, 0), 50, True)
     win.blit(font.render(kirjutatud_tekst, True, (128, 128, 128)),
              (100 + rlaius - font.size(kirjutatud_tekst)[0], winy / 2 - rkorgus / 2 - 100 + 10))
+
+    # statistika
+    # Sõnu minutis
+    WPM = round(kirjutatud_sonade_arv / (aeg / 60), 4)
+    font = pg.font.SysFont("Arial", 25)
+    win.blit(font.render("WPM: " + str(WPM), True, (255, 255, 255)), (rlaius, 170))
+
+    # vigade arv
+    win.blit(font.render("Vigade arv: " + str(vigade_arv), True, (255, 255, 255)), (rlaius, 200))
+
+    # Korrektsus
+    if tippimiste_arv != 0:
+        korrektsus = 100 - ((vigade_arv / tippimiste_arv) * 100)
+        if korrektsus < 0:
+            korrektsus = 0
+    else:
+        korrektsus = 0
+    win.blit(font.render("Korrektsus: " + str(int(round(korrektsus, 0))) + "%", True, (255, 255, 255)), (rlaius, 230))
 
     return True

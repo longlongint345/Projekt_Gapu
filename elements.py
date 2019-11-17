@@ -75,3 +75,4 @@ class tekstikast:
                 rida += 1
         else:
             win.blit(font.render(tekst, True, varv), (self.x, self.y + 10))
+
