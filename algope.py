@@ -73,7 +73,7 @@ def klahvi_asukoht(k):
         algy += (3 * moot)
         algx = ((((algx + (algx + moot)) / 2) + (algx + moot)) / 2) - (moot / 2)
         return ((rida3.index(k) * moot + algx, algy))
-    elif k in erandid:  # NB! erandid
+    elif k in erandid:  # NB! erandid lisada
         if k == " ":
             return (590, 766)
     else:

@@ -60,7 +60,9 @@ while True:
         if edasijoudnud.vajutus == "start":
             start_screen = True
     if lopmatu_screen:  # lõpmatu režiimi moodul
-        pass
+        lopmatu_screen = lopmatu.lopmatu_main(aken, akenx, akeny, hiir, klick, klahv)
+        if lopmatu.vajutus == "start":
+            start_screen = True
 
     # ------------------------------------------------------------
     klick = False

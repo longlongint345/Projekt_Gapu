@@ -50,23 +50,28 @@ class tekstikast:
             self.korgus + self.aarise_paksus * 2))
         pg.draw.rect(win, self.varv, (self.x, self.y, self.laius, self.korgus))
 
-    def kuva_tekst(self, win, tekst, varv=(0, 0, 0)):  # praegu peab jälgima, et tekst kasti y-sihis ära mahuks
-        font = pg.font.SysFont("Arial", 20)
-        lst = tekst.split(" ")
-        tekstirea_pikkus = 0
-        tekstirida = ""
-        rida = 0
-
-        while len(lst) != 0:
-            tekstirea_pikkus += font.size(lst[0])[0]
-            while tekstirea_pikkus <= self.laius - 20:
-                tekstirida += (lst[0] + " ")
-                lst.remove(lst[0])
-                if len(lst) == 0:
-                    break
-                tekstirea_pikkus += font.size(lst[0] + " ")[0]
-
-            win.blit(font.render(tekstirida, True, varv), (self.x + 10, self.y + rida * font.size(tekstirida)[1] + 15))
-            tekstirida = ""
+    def kuva_tekst(self, win, tekst, varv=(0, 0, 0), suurus=20,
+                   aareni=False):  # praegu peab jälgima, et tekst kasti y-sihis ära mahuks
+        font = pg.font.SysFont("Arial", suurus)
+        if not aareni:
+            lst = tekst.split(" ")
             tekstirea_pikkus = 0
-            rida += 1
+            tekstirida = ""
+            rida = 0
+
+            while len(lst) != 0:
+                tekstirea_pikkus += font.size(lst[0])[0]
+                while tekstirea_pikkus <= self.laius - suurus:
+                    tekstirida += (lst[0] + " ")
+                    lst.remove(lst[0])
+                    if len(lst) == 0:
+                        break
+                    tekstirea_pikkus += font.size(lst[0] + " ")[0]
+
+                win.blit(font.render(tekstirida, True, varv),
+                         (self.x + 10, self.y + rida * font.size(tekstirida)[1] + 15))
+                tekstirida = ""
+                tekstirea_pikkus = 0
+                rida += 1
+        else:
+            win.blit(font.render(tekst, True, varv), (self.x, self.y + 10))
