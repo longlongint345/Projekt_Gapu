@@ -34,9 +34,8 @@ def lopmatu_main(win, winx, winy, hiir, klikk, klahv):
         kell0 = time.time()
         tekst = file_to_string(os.path.join("data", "test.txt"))
         vajutus = ""
+        win.blit(pg.image.load(os.path.join("img", "tahistaevas.jpg")), (0, 0))
         ainult_korra = False
-
-    win.blit(pg.image.load(os.path.join("img", "tahistaevas.jpg")), (0, 0))
 
     # nupud
     tagasi = nupp(0, 0, 100, 150, "Tagasi", (0, 0, 170), (255, 255, 255))
@@ -86,11 +85,14 @@ def lopmatu_main(win, winx, winy, hiir, klikk, klahv):
             if klahv == " ":
                 kirjutatud_sonade_arv += 1
 
-    riba1.kuva_tekst(win, kuvatav_tekst, (0, 0, 0), 50, True)
-    win.blit(font.render(kirjutatud_tekst, True, (128, 128, 128)),
+    win.blit(font.render(kirjutatud_tekst, False, (128, 128, 128)),
              (100 + rlaius - font.size(kirjutatud_tekst)[0], winy / 2 - rkorgus / 2 - 100 + 10))
+    win.blit(font.render(kuvatav_tekst, False, (0, 0, 0)), (100 + rlaius, (winy / 2 - rkorgus / 2 - 100) + 10))
 
     # statistika
+    stat_kast = tekstikast(rlaius - 10, 160, 220, 115, (0, 0, 0))
+    stat_kast.aarise_varv = (255, 255, 255)
+    stat_kast.draw(win)
     # Sõnu minutis
     WPM = round(kirjutatud_sonade_arv / (aeg / 60), 4)
     font = pg.font.SysFont("Arial", 25)

@@ -11,6 +11,11 @@ pg.init()
 akenx = 1600
 akeny = 900
 aken = pg.display.set_mode((akenx, akeny))
+
+# parem jõudlus
+aken.set_alpha(None)
+pg.event.set_allowed([pg.QUIT, pg.NOEVENT, pg.MOUSEMOTION, pg.MOUSEBUTTONDOWN, pg.KEYDOWN])
+
 pg.display.set_caption("Projekt Gapu")
 hiir = pg.mouse.get_pos()
 klick = False
@@ -31,7 +36,6 @@ while True:
             pg.time.wait(30)  # vajalik animatsiooni toimimiseks
     else:
         e = pg.event.wait()
-
 
     if e.type == pg.QUIT:
         break
