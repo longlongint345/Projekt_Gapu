@@ -4,6 +4,7 @@ from elements import nupp
 from elements import tekstikast
 from algope import file_to_string
 import time
+import statistika
 
 vajutus = ""
 tippimiste_arv = 0
@@ -16,7 +17,7 @@ kirjutatud_sonade_arv = 0
 aeg = 0.1
 vigade_arv = 0
 tekst = ""
-
+tase = statistika.get_tase("lopmatu")
 
 def lopmatu_main(win, winx, winy, hiir, klikk, klahv):
     global vajutus
@@ -30,6 +31,7 @@ def lopmatu_main(win, winx, winy, hiir, klikk, klahv):
     global kell0
     global aeg
     global tekst
+    global tase
     if ainult_korra:  # hiljem saab seda struktuuri kasutada koodi optimeerimiseks
         kell0 = time.time()
         tekst = file_to_string(os.path.join("data", "test.txt"))
@@ -43,6 +45,7 @@ def lopmatu_main(win, winx, winy, hiir, klikk, klahv):
         tagasi.varv = (0, 0, 255)
     tagasi.draw(win)
     if tagasi.is_clicked(klikk, hiir):  # + reset
+        statistika.salvesta_sessioon("lopmatu")
         vajutus = "start"
         tippimiste_arv = 0
         kirjutatud_tekst = ""

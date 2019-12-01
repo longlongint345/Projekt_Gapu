@@ -2,12 +2,14 @@ import pygame as pg
 import os
 from elements import nupp
 from elements import tekstikast
+import statistika
 
 vajutus = ""
 kirjutatud_tekst = ""
 kirjutamise_jarg = -1
 counter = 0
 viga = False
+tase = statistika.get_tase("alg")
 
 
 # tagastab igale tähele vastava pildi nime
@@ -87,10 +89,20 @@ def kuva(win, wx, wy, hiir, klikk, klahv):
     global counter
     global liikumine
     global viga
+    global tase
     vajutus = ""
 
-    tekst = file_to_string(os.path.join("data", "test.txt"))
-    jargmine_taht = tekst[kirjutamise_jarg + 1]  # NB! et teksti lõpus listist välja ei läheks
+    tekst = file_to_string(os.path.join("data", "algope" + str(tase) + ".txt"))
+
+    if kirjutamise_jarg + 1 >= len(tekst):  # uue teksti laadimine
+        tase += 1
+        statistika.tase_ules("alg")
+        kirjutamise_jarg = -1
+        kirjutatud_tekst = ""
+
+    # mooduli lõpp siia
+
+    jargmine_taht = tekst[kirjutamise_jarg + 1]
 
     win.fill((255, 255, 255))
     klaius = 900
@@ -99,7 +111,7 @@ def kuva(win, wx, wy, hiir, klikk, klahv):
     if viga:
         kast1.aarise_varv = (255, 0, 0)
     kast1.draw(win)
-    kast1.kuva_tekst(win, tekst)
+    kast1.kuva_tekst(win, tekst, (0, 0, 0), 24)
 
     nihe_nurgast = 75
     kpikkus = 300
@@ -152,7 +164,7 @@ def kuva(win, wx, wy, hiir, klikk, klahv):
             viga = True
             counter = 0
             # kirjutamisveale saab reageerida siit
-    kast1.kuva_tekst(win, kirjutatud_tekst, (0, 200, 0))
+    kast1.kuva_tekst(win, kirjutatud_tekst, (0, 200, 0), 24)
 
     # animatsiooni(de) kuvamine
     anim = sorm(jargmine_taht)

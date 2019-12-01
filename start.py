@@ -5,7 +5,7 @@ from elements import nupp
 vajutus = ""
 
 
-def screen(win, wx, hiir, klikk):
+def screen(win, wx, wy, hiir, klikk):
     global vajutus
     vajutus = ""
     wel_img = pg.image.load(os.path.join("img", "Microsoft_Keyboard.jpg"))
@@ -45,6 +45,15 @@ def screen(win, wx, hiir, klikk):
     if lopmatu.is_clicked(klikk, hiir):
         vajutus = "lopmatu"
         win.fill((0, 0, 0))
+        return False
+
+    stat = nupp(0, wy - korgus, korgus, 200, "Statistika")
+    if stat.hiire_all(hiir):
+        stat.varv = (0, 0, 255)
+    stat.draw(win)
+    if stat.is_clicked(klikk, hiir):
+        win.fill((0, 0, 0))
+        vajutus = "statistika"
         return False
 
     return True
