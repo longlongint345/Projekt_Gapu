@@ -3,6 +3,7 @@ import os
 from elements import nupp
 from elements import tekstikast
 import statistika
+import time
 
 vajutus = ""
 kirjutatud_tekst = ""
@@ -10,6 +11,9 @@ kirjutamise_jarg = -1
 counter = 0
 viga = False
 tase = statistika.get_tase("alg")
+kell0 = time.time()
+aeg = 0.1
+ainult_korra = True
 
 
 # tagastab igale tähele vastava pildi nime
@@ -90,7 +94,14 @@ def kuva(win, wx, wy, hiir, klikk, klahv):
     global liikumine
     global viga
     global tase
-    vajutus = ""
+    global kell0
+    global aeg
+    global ainult_korra
+    if ainult_korra:
+        vajutus = ""
+        win.fill((255, 255, 255))
+        # win.blit(pg.image.load(os.path.join("img", "img.jpg")), (0, 0))
+        ainult_korra = False
 
     tekst = file_to_string(os.path.join("data", "algope" + str(tase) + ".txt"))
 
@@ -104,7 +115,6 @@ def kuva(win, wx, wy, hiir, klikk, klahv):
 
     jargmine_taht = tekst[kirjutamise_jarg + 1]
 
-    win.fill((255, 255, 255))
     klaius = 900
     kpikkus = 400
     kast1 = tekstikast(wx / 2 - klaius / 2, 50, klaius, kpikkus)
@@ -148,16 +158,21 @@ def kuva(win, wx, wy, hiir, klikk, klahv):
     tagasi.draw(win)
     if tagasi.is_clicked(klikk, hiir):  # moodulist väljumine ja muutujate algseadistamine
         win.fill((0, 0, 0))
+        statistika.salvesta_sessioon("alg")
         vajutus = "start"
+        ainult_korra = True
         kirjutatud_tekst = ""
         kirjutamise_jarg = -1
         counter = 0
+        aeg = 0.1
+        kell0 = time.time()
         return False
 
     # teksti sisestamine
     if klahv != "":
         kirjutatud_tekst += klahv
         kirjutamise_jarg += 1
+        aeg = time.time() - kell0
         if tekst[kirjutamise_jarg] != kirjutatud_tekst[kirjutamise_jarg]:
             kirjutamise_jarg -= 1
             kirjutatud_tekst = kirjutatud_tekst[:-1]

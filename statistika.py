@@ -30,14 +30,26 @@ def tase_ules(mooduli_nimi):  # kutsuda välja, kui kasutaja on läbinud mingis 
 
 def salvesta_sessioon(mooduli_nimi):  # kutsuda välja kui kasutaja vajutab tagasi nuppu (enne muutujate reset'i)
     # ideaalis peaks lisama võimaluse, et see ka X-nuppu vajutades toimuks
-    import algope
+    from algope import aeg as aeg_a
     import edasijoudnud
     from lopmatu import aeg, WPM
     if mooduli_nimi not in ("alg", "edasi", "lopmatu"):
         raise Exception("Funktsioonis salvesta_sessioon sobimatu mooduli nimi.")
 
     if mooduli_nimi == "alg":
-        pass
+        with open(os.path.join("data", "alg_stat.txt"), "r+") as f:
+            data = f.readlines()
+            if not data:
+                f.write("0")
+                f.seek(0)
+                data = f.readlines()
+            for x in range(len(data)):
+                data[x] = data[x].strip()
+            aeg_kogu = float(data[0]) + aeg_a
+            f.seek(0)
+            f.truncate()
+            f.write(str(aeg_kogu))
+
     elif mooduli_nimi == "edasi":
         pass
     elif mooduli_nimi == "lopmatu":
@@ -64,7 +76,10 @@ def get_stat(mooduli_nimi):  # tagastab listi koos soovitud andmetega (järjekor
         raise Exception("Funktsioonis get_stat sobimatu mooduli nimi.")
     output = []
     if mooduli_nimi == "alg":
-        pass
+        with open(os.path.join("data", "alg_stat.txt"), "r") as fsisse:
+            for x in fsisse.readlines():
+                x = x.strip()
+                output.append(float(x))
     elif mooduli_nimi == "edasi":
         pass
     elif mooduli_nimi == "lopmatu":
@@ -98,10 +113,11 @@ def get_tase(mooduli_nimi):  # tagastab taseme, kus kasutaja vastavas moodulis o
 
 
 vajutus = ""
-
+kustutus = False
 
 def main_screen(win, wx, wy, hiir, klikk):
     global vajutus
+    global kustutus
     vajutus = ""
     win.fill((255, 255, 255))
     # -------------------------------------------------------------------------------------------------------------------
@@ -116,6 +132,9 @@ def main_screen(win, wx, wy, hiir, klikk):
 
     laius = 350
     pikkus = 75
+    varv = (0, 0, 0)
+    suurus = 32
+    font = pg.font.SysFont("Arial", suurus)
     reset = nupp(wx / 2 - laius / 2, 0, pikkus, laius, "Kustuta kogu õppeprotsess", (0, 0, 170), (255, 255, 255))
     if reset.hiire_all(hiir):
         reset.varv = (255, 0, 0)
@@ -130,6 +149,12 @@ def main_screen(win, wx, wy, hiir, klikk):
         with open(os.path.join("data", "progress.txt"), "w") as f:
             pass
 
+        kustutus = True
+    if kustutus:
+        font.set_underline(True)
+        win.blit(font.render("Muudatuste jõustumiseks taaskäivitage programm!", True, varv),
+                 (wx / 2 - font.size("Muudatuste jõustumiseks taaskäivitage programm!")[0] / 2, 150))
+        font.set_underline(False)
     # --------------------------------------------------------------------------------------------------------------
     # tekstikastid
     laius = 400
@@ -142,9 +167,6 @@ def main_screen(win, wx, wy, hiir, klikk):
     info_lopmatu.draw(win)
 
     # pealdised
-    varv = (0, 0, 0)
-    suurus = 32
-    font = pg.font.SysFont("Arial", suurus)
     win.blit(font.render("Algõpe:", True, varv), (wx / 2 - laius / 2 - laius + 10, 250))
     win.blit(font.render("Edasijõudnud:", True, varv), (wx / 2 - laius / 2 + 10, 250))
     win.blit(font.render("Lõpmatu:", True, varv), (wx / 2 - laius / 2 + laius + 10, 250))
@@ -153,6 +175,8 @@ def main_screen(win, wx, wy, hiir, klikk):
     font = pg.font.SysFont("Arial", suurus)
     # algõpe kast
     win.blit(font.render("Tase: " + str(get_tase("alg")), True, varv), (wx / 2 - laius / 2 - laius + 10, 310))
+    win.blit(font.render("Aeg kokku: " + str(int(get_stat("alg")[0])) + " sekundit", True, varv),
+             (wx / 2 - laius / 2 - laius + 10, 360))
     # edasijõudnud kast
     win.blit(font.render("Tase: " + str(get_tase("alg")), True, varv), (wx / 2 - laius / 2 + 10, 310))
     # lõpmatu
