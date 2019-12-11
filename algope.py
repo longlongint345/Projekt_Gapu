@@ -2,12 +2,18 @@ import pygame as pg
 import os
 from elements import nupp
 from elements import tekstikast
+import statistika
+import time
 
 vajutus = ""
 kirjutatud_tekst = ""
 kirjutamise_jarg = -1
 counter = 0
 viga = False
+tase = statistika.get_tase("alg")
+kell0 = time.time()
+aeg = 0.1
+ainult_korra = True
 
 
 
@@ -88,19 +94,35 @@ def kuva(win, wx, wy, hiir, klikk, klahv):
     global counter
     global liikumine
     global viga
-    vajutus = ""
+    global tase
+    global kell0
+    global aeg
+    global ainult_korra
+    if ainult_korra:
+        vajutus = ""
+        win.fill((255, 255, 255))
+        # win.blit(pg.image.load(os.path.join("img", "img.jpg")), (0, 0))
+        ainult_korra = False
 
-    tekst = file_to_string(os.path.join("data", "test.txt"))
-    jargmine_taht = tekst[kirjutamise_jarg + 1]  # NB! et teksti lõpus listist välja ei läheks
+    tekst = file_to_string(os.path.join("data", "algope" + str(tase) + ".txt"))
 
-    win.fill((255, 255, 255))
+    if kirjutamise_jarg + 1 >= len(tekst):  # uue teksti laadimine
+        tase += 1
+        statistika.tase_ules("alg")
+        kirjutamise_jarg = -1
+        kirjutatud_tekst = ""
+
+    # mooduli lõpp siia
+
+    jargmine_taht = tekst[kirjutamise_jarg + 1]
+
     klaius = 900
     kpikkus = 400
     kast1 = tekstikast(wx / 2 - klaius / 2, 50, klaius, kpikkus)
     if viga:
         kast1.aarise_varv = (255, 0, 0)
     kast1.draw(win)
-    kast1.kuva_tekst(win, tekst)
+    kast1.kuva_tekst(win, tekst, (0, 0, 0), 24)
 
     nihe_nurgast = 75
     kpikkus = 300
@@ -137,23 +159,28 @@ def kuva(win, wx, wy, hiir, klikk, klahv):
     tagasi.draw(win)
     if tagasi.is_clicked(klikk, hiir):  # moodulist väljumine ja muutujate algseadistamine
         win.fill((0, 0, 0))
+        statistika.salvesta_sessioon("alg")
         vajutus = "start"
+        ainult_korra = True
         kirjutatud_tekst = ""
         kirjutamise_jarg = -1
         counter = 0
+        aeg = 0.1
+        kell0 = time.time()
         return False
 
     # teksti sisestamine
     if klahv != "":
         kirjutatud_tekst += klahv
         kirjutamise_jarg += 1
+        aeg = time.time() - kell0
         if tekst[kirjutamise_jarg] != kirjutatud_tekst[kirjutamise_jarg]:
             kirjutamise_jarg -= 1
             kirjutatud_tekst = kirjutatud_tekst[:-1]
             viga = True
             counter = 0
             # kirjutamisveale saab reageerida siit
-    kast1.kuva_tekst(win, kirjutatud_tekst, (0, 200, 0))
+    kast1.kuva_tekst(win, kirjutatud_tekst, (0, 200, 0), 24)
 
     # animatsiooni(de) kuvamine
     anim = sorm(jargmine_taht)

@@ -3,6 +3,7 @@ import start
 import algope
 import edasijoudnud
 import lopmatu
+import statistika
 
 # https://www.pygame.org/docs/
 
@@ -25,6 +26,7 @@ start_screen = True
 algope_screen = False
 edasijoudnute_screen = False
 lopmatu_screen = False
+statistika_screen = False
 
 # Main loop
 while True:
@@ -48,13 +50,15 @@ while True:
 
     # Mis hetkel toimub
     if start_screen:  # algusekraan
-        start_screen = start.screen(aken, akenx, hiir, klick)
+        start_screen = start.screen(aken, akenx, akeny, hiir, klick)
         if start.vajutus == "alg":
             algope_screen = True
         elif start.vajutus == "edasi":
             edasijoudnute_screen = True
         elif start.vajutus == "lopmatu":
             lopmatu_screen = True
+        elif start.vajutus == "statistika":
+            statistika_screen = True
     if algope_screen:  # algõppe moodul
         algope_screen = algope.kuva(aken, akenx, akeny, hiir, klick, klahv)
         if algope.vajutus == "start":
@@ -67,6 +71,11 @@ while True:
         lopmatu_screen = lopmatu.lopmatu_main(aken, akenx, akeny, hiir, klick, klahv)
         if lopmatu.vajutus == "start":
             start_screen = True
+    if statistika_screen:
+        statistika_screen = statistika.main_screen(aken, akenx, akeny, hiir, klick)
+        if statistika.vajutus == "start":
+            start_screen = True
+
 
     # ------------------------------------------------------------
     klick = False
