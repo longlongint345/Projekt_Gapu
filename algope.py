@@ -104,6 +104,32 @@ def kuva(win, wx, wy, hiir, klikk, klahv):
         # win.blit(pg.image.load(os.path.join("img", "img.jpg")), (0, 0))
         ainult_korra = False
 
+    if tase >= 20:
+        win.fill((255, 255, 255))
+        font = pg.font.SysFont("Arial", 50)
+        win.blit(font.render("Mooduli lõpp!", True, (0, 0, 0)),
+                 (wx / 2 - font.size("Mooduli lõpp!")[0] / 2, wy / 2 - font.size("Mooduli lõpp!")[1] / 2))
+
+    # nupud
+    tagasi = nupp(0, 0, 100, 150, "Tagasi", (0, 0, 170), (255, 255, 255))
+    if tagasi.hiire_all(hiir):
+        tagasi.varv = (0, 0, 255)
+    tagasi.draw(win)
+    if tagasi.is_clicked(klikk, hiir):  # moodulist väljumine ja muutujate algseadistamine
+        win.fill((0, 0, 0))
+        statistika.salvesta_sessioon("alg")
+        vajutus = "start"
+        ainult_korra = True
+        kirjutatud_tekst = ""
+        kirjutamise_jarg = -1
+        counter = 0
+        aeg = 0.1
+        kell0 = time.time()
+        return False
+
+    if tase >= 20:
+        return True
+
     tekst = file_to_string(os.path.join("data", "algope" + str(tase) + ".txt"))
 
     if kirjutamise_jarg + 1 >= len(tekst):  # uue teksti laadimine
@@ -111,8 +137,6 @@ def kuva(win, wx, wy, hiir, klikk, klahv):
         statistika.tase_ules("alg")
         kirjutamise_jarg = -1
         kirjutatud_tekst = ""
-
-    # mooduli lõpp siia
 
     jargmine_taht = tekst[kirjutamise_jarg + 1]
 
@@ -151,23 +175,6 @@ def kuva(win, wx, wy, hiir, klikk, klahv):
         pind.set_alpha(150)
         pind.fill((255, 255, 0))
         win.blit(pind, (klahvi_asukoht(jargmine_taht)[0], klahvi_asukoht(jargmine_taht)[1]))
-
-    # nupud
-    tagasi = nupp(0, 0, 100, 150, "Tagasi", (0, 0, 170), (255, 255, 255))
-    if tagasi.hiire_all(hiir):
-        tagasi.varv = (0, 0, 255)
-    tagasi.draw(win)
-    if tagasi.is_clicked(klikk, hiir):  # moodulist väljumine ja muutujate algseadistamine
-        win.fill((0, 0, 0))
-        statistika.salvesta_sessioon("alg")
-        vajutus = "start"
-        ainult_korra = True
-        kirjutatud_tekst = ""
-        kirjutamise_jarg = -1
-        counter = 0
-        aeg = 0.1
-        kell0 = time.time()
-        return False
 
     # teksti sisestamine
     if klahv != "":
