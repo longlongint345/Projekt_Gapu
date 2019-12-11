@@ -109,5 +109,6 @@ def lopmatu_main(win, winx, winy, hiir, klikk, klahv):
     else:
         korrektsus = 0
     win.blit(font.render("Korrektsus: " + str(int(round(korrektsus, 0))) + "%", True, (255, 255, 255)), (rlaius, 230))
+    
 
     return True

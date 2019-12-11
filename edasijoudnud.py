@@ -2,11 +2,21 @@ import pygame as pg
 import os
 from elements import nupp
 from elements import tekstikast
+import time
 
 vajutus = ""
 kirjutatud_tekst = ""
 kirjutamise_järg = -1
 viga = False
+tippimiste_arv = 0
+WPM = 0
+ainult_korra = True
+kell0 = 0
+kirjutatud_sõnad = 0
+aeg = 0.1
+vigade_arv = 0
+tekst = ""
+
 
 def file_to_string(failinimi):
     sõne = ""
@@ -20,8 +30,16 @@ def edasijõudnud_main(win, wx, wy, hiir, klikk, klahv):
     global vajutus
     global kirjutatud_tekst
     global kirjutamise_järg
-    global counter
     global viga
+    global tippimiste_arv
+    global kirjutatud_sõnad
+    global vigade_arv
+    global WPM
+    global ainult_korra
+    global kell0
+    global aeg
+    global tekst
+    
     vajutus = ""
 
     tekst = file_to_string(os.path.join("jutt", "transkriptsioon.txt"))
@@ -33,6 +51,7 @@ def edasijõudnud_main(win, wx, wy, hiir, klikk, klahv):
     kast1 = tekstikast(wx / 2 - kastilaius / 2, 50, kastilaius, kastipikkus)
     if viga:
         kast1.aarise_varv = (255, 0, 0)
+
     kast1.draw(win)
     kast1.kuva_tekst(win, tekst)
 
@@ -47,7 +66,7 @@ def edasijõudnud_main(win, wx, wy, hiir, klikk, klahv):
         kirjutamise_järg = -1
         return False
     
-    nihe_nurgast = 75
+    nihe_nurgast = 40
     pildilaius = 250
     pildikõrgus = 250
     taimer = pg.transform.scale(pg.image.load(os.path.join("img", "timer.png")), (pildilaius, pildikõrgus))
@@ -61,9 +80,34 @@ def edasijõudnud_main(win, wx, wy, hiir, klikk, klahv):
             kirjutamise_järg -= 1
             kirjutatud_tekst = kirjutatud_tekst[:-1]
             viga = True
+            vigade_arv += 1
         else:
             viga = False
+            
+            aeg = time.time() - kell0
+            if klahv == " ":
+                kirjutatud_sõnad += 1
     kast1.kuva_tekst(win, kirjutatud_tekst, (0, 200, 0))
 
+    kiiruse_kast = tekstikast(kastilaius - 380, 660, 360, 160, (0, 0, 0))
+    kiiruse_kast.aarise_varv = (255, 255, 255)
+    kiiruse_kast.draw(win)
+
+    WPM = round(kirjutatud_sõnad / (aeg / 60), 4)
+    font = pg.font.SysFont("Arial", 25)
+    
+    win.blit(font.render("Kirjutatud sõnad: " + str(kirjutatud_sõnad), True, (255, 255, 255)), (kastilaius - 370, 670))
+    win.blit(font.render("WPM: " + str(WPM), True, (255, 255, 255)), (kastilaius - 370, 710))
+
+    win.blit(font.render("Vigade arv: " + str(vigade_arv), True, (255, 255, 255)), (kastilaius - 370, 750))
+    
+    #win.blit(font.render("Aeg: " + str(aeg/60), True, (255, 255, 255)), (kastilaius - 370, 790))
+    
+    
     return True
+    
+
+
+    
+
 

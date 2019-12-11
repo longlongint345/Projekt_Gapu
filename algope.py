@@ -10,6 +10,7 @@ counter = 0
 viga = False
 
 
+
 # tagastab igale tähele vastava pildi nime
 def sorm(taht):
     taht = taht.lower()
@@ -170,4 +171,6 @@ def kuva(win, wx, wy, hiir, klikk, klahv):
         viga = False
         counter = 0
 
+
     return True
+
