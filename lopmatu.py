@@ -4,8 +4,8 @@ from elements import nupp
 from elements import tekstikast
 import time
 import statistika
-import requests
-from bs4 import BeautifulSoup
+#import requests
+#from bs4 import BeautifulSoup
 
 vajutus = ""
 tippimiste_arv = 0

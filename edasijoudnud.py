@@ -2,6 +2,7 @@ import pygame as pg
 import os
 from elements import nupp
 from elements import tekstikast
+import statistika
 import time
 
 vajutus = ""
@@ -16,6 +17,7 @@ kirjutatud_sõnad = 0
 aeg = 0.1
 vigade_arv = 0
 tekst = ""
+tase = statistika.get_tase("edasi")
 
 
 def file_to_string(failinimi):
@@ -39,15 +41,24 @@ def edasijõudnud_main(win, wx, wy, hiir, klikk, klahv):
     global kell0
     global aeg
     global tekst
+    global tase
     
     vajutus = ""
+    
+    tekst = file_to_string(os.path.join("jutt", "edasi" + str(tase) + ".txt"))
 
-    tekst = file_to_string(os.path.join("jutt", "transkriptsioon.txt"))
+    if kirjutamise_järg + 1 >= len(tekst):
+        tase += 1
+        statistika.tase_ules("edasi")
+        kirjutamise_järg = -1
+        kirjutatud_tekst = ""
+        
+ #   tekst = file_to_string(os.path.join("jutt", "edasi1.txt"))
     järgmine_täht = tekst[kirjutamise_järg + 1]  
 
     win.fill((255, 255, 255))
-    kastilaius = 1000
-    kastipikkus = 500
+    kastilaius = 900
+    kastipikkus = 400
     kast1 = tekstikast(wx / 2 - kastilaius / 2, 50, kastilaius, kastipikkus)
     if viga:
         kast1.aarise_varv = (255, 0, 0)
@@ -89,17 +100,21 @@ def edasijõudnud_main(win, wx, wy, hiir, klikk, klahv):
                 kirjutatud_sõnad += 1
     kast1.kuva_tekst(win, kirjutatud_tekst, (0, 200, 0))
 
-    kiiruse_kast = tekstikast(kastilaius - 380, 660, 360, 160, (0, 0, 0))
+    kiiruse_kast = tekstikast(kastilaius - 340, 600, 500, 200, (0, 0, 0))
     kiiruse_kast.aarise_varv = (255, 255, 255)
     kiiruse_kast.draw(win)
 
     WPM = round(kirjutatud_sõnad / (aeg / 60), 4)
     font = pg.font.SysFont("Arial", 25)
     
-    win.blit(font.render("Kirjutatud sõnad: " + str(kirjutatud_sõnad), True, (255, 255, 255)), (kastilaius - 370, 670))
-    win.blit(font.render("WPM: " + str(WPM), True, (255, 255, 255)), (kastilaius - 370, 710))
+    win.blit(font.render("Kirjutatud sõnad: " + str(kirjutatud_sõnad), True, (255, 255, 255)), (kastilaius - 330, 610))
+    win.blit(font.render("WPM: " + str(WPM), True, (255, 255, 255)), (kastilaius - 330, 650))
 
-    win.blit(font.render("Vigade arv: " + str(vigade_arv), True, (255, 255, 255)), (kastilaius - 370, 750))
+    win.blit(font.render("Vigade arv: " + str(vigade_arv), True, (255, 255, 255)), (kastilaius - 330, 690))
+    win.blit(font.render("Aeg: " + str(aeg/60), True, (255, 255, 255)), (kastilaius - 370, 790))
+    
+    if vigade_arv >= 10:
+        win.blit(font.render("Proovi täpsem olla!", True, (255, 255, 255)), (kastilaius - 330, 730))
     
     #win.blit(font.render("Aeg: " + str(aeg/60), True, (255, 255, 255)), (kastilaius - 370, 790))
     
