@@ -42,8 +42,9 @@ def edasijõudnud_main(win, wx, wy, hiir, klikk, klahv):
     global aeg
     global tekst
     global tase
-    
-    vajutus = ""
+    if ainult_korra:
+        kell0 = time.time()
+        ainult_korra = False
     
     tekst = file_to_string(os.path.join("jutt", "edasi" + str(tase) + ".txt"))
 
@@ -111,12 +112,11 @@ def edasijõudnud_main(win, wx, wy, hiir, klikk, klahv):
     win.blit(font.render("WPM: " + str(WPM), True, (255, 255, 255)), (kastilaius - 330, 650))
 
     win.blit(font.render("Vigade arv: " + str(vigade_arv), True, (255, 255, 255)), (kastilaius - 330, 690))
-    win.blit(font.render("Aeg: " + str(aeg/60), True, (255, 255, 255)), (kastilaius - 370, 790))
+    win.blit(font.render("Aeg: " + str(aeg) + "sekundit", True, (255, 255, 255)), (kastilaius - 330, 730))
     
     if vigade_arv >= 10:
-        win.blit(font.render("Proovi täpsem olla!", True, (255, 255, 255)), (kastilaius - 330, 730))
+        win.blit(font.render("Proovi täpsem olla!", True, (255, 255, 255)), (kastilaius - 330, 770))
     
-    #win.blit(font.render("Aeg: " + str(aeg/60), True, (255, 255, 255)), (kastilaius - 370, 790))
     
     
     return True
