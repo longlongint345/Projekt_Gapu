@@ -16,7 +16,6 @@ aeg = 0.1
 ainult_korra = True
 
 
-
 # tagastab igale tähele vastava pildi nime
 def sorm(taht):
     taht = taht.lower()
@@ -88,16 +87,8 @@ def klahvi_asukoht(k):
 
 
 def kuva(win, wx, wy, hiir, klikk, klahv):
-    global vajutus
-    global kirjutatud_tekst
-    global kirjutamise_jarg
-    global counter
-    global liikumine
-    global viga
-    global tase
-    global kell0
-    global aeg
-    global ainult_korra
+    global vajutus, kirjutatud_tekst, kirjutamise_jarg, counter, viga, tase, kell0, aeg, ainult_korra
+
     if ainult_korra:
         vajutus = ""
         win.fill((255, 255, 255))
@@ -205,6 +196,4 @@ def kuva(win, wx, wy, hiir, klikk, klahv):
         viga = False
         counter = 0
 
-
     return True
-

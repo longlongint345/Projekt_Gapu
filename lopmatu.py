@@ -38,18 +38,8 @@ def web_scraper():
 
 
 def lopmatu_main(win, winx, winy, hiir, klikk, klahv):
-    global vajutus
-    global viga
-    global tippimiste_arv
-    global kirjutatud_tekst
-    global kirjutatud_sonade_arv
-    global vigade_arv
-    global WPM
-    global ainult_korra
-    global kell0
-    global aeg
-    global tekst
-    global tase
+    global vajutus, viga, tippimiste_arv, kirjutatud_tekst, kirjutatud_sonade_arv, vigade_arv, WPM, ainult_korra, kell0, aeg, tekst, tase
+
     if ainult_korra:  # hiljem saab seda struktuuri kasutada koodi optimeerimiseks
         kell0 = time.time()
         tekst = web_scraper()
@@ -150,6 +140,5 @@ def lopmatu_main(win, winx, winy, hiir, klikk, klahv):
     else:
         korrektsus = 0
     win.blit(font.render("Korrektsus: " + str(int(round(korrektsus, 0))) + "%", True, (255, 255, 255)), (rlaius, 230))
-    
 
     return True

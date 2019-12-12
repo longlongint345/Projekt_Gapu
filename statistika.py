@@ -31,7 +31,7 @@ def tase_ules(mooduli_nimi):  # kutsuda välja, kui kasutaja on läbinud mingis 
 def salvesta_sessioon(mooduli_nimi):  # kutsuda välja kui kasutaja vajutab tagasi nuppu (enne muutujate reset'i)
     # ideaalis peaks lisama võimaluse, et see ka X-nuppu vajutades toimuks
     from algope import aeg as aeg_a
-    from edasijoudnud import WPM as WPMe, aeg as aeg_e, kirjutatud_sõnad as sonu_e
+    from edasijoudnud import WPM as WPMe, aeg as aeg_e, kirjutatud_sonad as sonu_e
     from lopmatu import aeg, WPM
     if mooduli_nimi not in ("alg", "edasi", "lopmatu"):
         raise Exception("Funktsioonis salvesta_sessioon sobimatu mooduli nimi.")
@@ -133,7 +133,8 @@ def get_tase(mooduli_nimi):  # tagastab taseme, kus kasutaja vastavas moodulis o
 vajutus = ""
 kustutus = False
 
-def main_screen(win, wx, wy, hiir, klikk):
+
+def main_screen(win, wx, hiir, klikk):
     global vajutus
     global kustutus
     vajutus = ""
