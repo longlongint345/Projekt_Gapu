@@ -43,7 +43,7 @@ def sorm(taht):
 
 def file_to_string(pathtofnimi):
     sone = ""
-    with open(pathtofnimi, "r") as fsisse:
+    with open(pathtofnimi, "r", encoding="utf-8") as fsisse:
         for x in fsisse.readlines():
             tmp = x.strip().split(" ")
             sone += " ".join(tmp)
@@ -80,7 +80,7 @@ def klahvi_asukoht(k):
         algy += (3 * moot)
         algx = ((((algx + (algx + moot)) / 2) + (algx + moot)) / 2) - (moot / 2)
         return ((rida3.index(k) * moot + algx, algy))
-    elif k in erandid:  # NB! erandid lisada
+    elif k in erandid:  # NB! erandid lisada (kunagi tulevikus)
         if k == " ":
             return (590, 766)
     else:

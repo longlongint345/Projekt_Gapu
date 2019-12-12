@@ -23,14 +23,17 @@ tase = statistika.get_tase("lopmatu")
 
 # tagastab teksti suvalisest eestikeelse Vikipeedia artiklist
 def web_scraper():
-    response = requests.get("https://et.wikipedia.org/wiki/Eri:Juhuslik_artikkel")
-    soup = BeautifulSoup(response.text, "html.parser")
-    output = ""
-    for x in soup.select("p"):
-        if output != "":
-            output = output + " " + x.getText().strip()
-        else:
-            output += x.getText().strip()
+    try:
+        response = requests.get("https://et.wikipedia.org/wiki/Eri:Juhuslik_artikkel")
+        soup = BeautifulSoup(response.text, "html.parser")
+        output = ""
+        for x in soup.select("p"):
+            if output != "":
+                output = output + " " + x.getText().strip()
+            else:
+                output += x.getText().strip()
+    except:
+        output = "Puudub internetiühendus!"
     return output
 
 

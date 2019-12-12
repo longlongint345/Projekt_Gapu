@@ -22,6 +22,7 @@ hiir = pg.mouse.get_pos()
 klick = False
 klahv = ""
 
+kaivitus = True
 start_screen = True
 algope_screen = False
 edasijoudnute_screen = False
@@ -37,7 +38,11 @@ while True:
         if e.type == pg.NOEVENT:
             pg.time.wait(30)  # vajalik animatsiooni toimimiseks
     else:
-        e = pg.event.wait()
+        if not kaivitus:
+            e = pg.event.wait()
+        else:
+            e = pg.event.poll()
+            kaivitus = False
 
     if e.type == pg.QUIT:
         break
