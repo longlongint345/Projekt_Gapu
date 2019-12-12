@@ -26,25 +26,16 @@ def edasijoudnud_main(win, wx, wy, hiir, klikk, klahv):
 
     if ainult_korra:
         kell0 = time.time()
-        tekst = file_to_string(os.path.join("jutt", "edasi" + str(tase) + ".txt"))
+        win.fill((255, 255, 255))
+        if tase <= 10:
+            tekst = file_to_string(os.path.join("data", "edasi" + str(tase) + ".txt"))
         ainult_korra = False
 
-    if kirjutamise_jarg + 1 >= len(tekst):
-        tase += 1
-        statistika.tase_ules("edasi")
-        tekst = file_to_string(os.path.join("jutt", "edasi" + str(tase) + ".txt"))
-        kirjutamise_jarg = -1
-        kirjutatud_tekst = ""
-
-    win.fill((255, 255, 255))
-    kastilaius = 900
-    kastipikkus = 400
-    kast1 = tekstikast(wx / 2 - kastilaius / 2, 50, kastilaius, kastipikkus)
-    if viga:
-        kast1.aarise_varv = (255, 0, 0)
-
-    kast1.draw(win)
-    kast1.kuva_tekst(win, tekst)
+    if tase >= 11:
+        win.fill((255, 255, 255))
+        font = pg.font.SysFont("Arial", 50)
+        win.blit(font.render("Mooduli lõpp!", True, (0, 0, 0)),
+                 (wx / 2 - font.size("Mooduli lõpp!")[0] / 2, wy / 2 - font.size("Mooduli lõpp!")[1] / 2))
 
     tagasi = nupp(0, 0, 100, 150, "Tagasi", (0, 0, 170), (255, 255, 255))
     if tagasi.hiire_all(hiir):
@@ -63,6 +54,27 @@ def edasijoudnud_main(win, wx, wy, hiir, klikk, klahv):
         WPM = 0
         vigade_arv = 0
         return False
+
+    if tase >= 11:
+        return True
+
+    if kirjutamise_jarg + 1 >= len(tekst):
+        tase += 1
+        statistika.tase_ules("edasi")
+        if tase <= 10:
+            tekst = file_to_string(os.path.join("data", "edasi" + str(tase) + ".txt"))
+        kirjutamise_jarg = -1
+        kirjutatud_tekst = ""
+
+    kastilaius = 900
+    kastipikkus = 525
+    kast1 = tekstikast(wx / 2 - kastilaius / 2, 50, kastilaius, kastipikkus)
+    if viga:
+        kast1.aarise_varv = (255, 0, 0)
+
+    kast1.draw(win)
+    kast1.kuva_tekst(win, tekst)
+
 
     nihe_nurgast = 40
     pildilaius = 250
@@ -87,7 +99,7 @@ def edasijoudnud_main(win, wx, wy, hiir, klikk, klahv):
                 kirjutatud_sonad += 1
     kast1.kuva_tekst(win, kirjutatud_tekst, (0, 200, 0))
 
-    kiiruse_kast = tekstikast(kastilaius - 340, 600, 500, 200, (255, 255, 255))
+    kiiruse_kast = tekstikast(kastilaius - 340, 605, 500, 220, (255, 255, 255))
     kiiruse_kast.aarise_varv = (0, 0, 0)
     kiiruse_kast.draw(win)
     teksti_varv = (0, 0, 0)
@@ -101,6 +113,6 @@ def edasijoudnud_main(win, wx, wy, hiir, klikk, klahv):
     win.blit(font.render("Aeg: " + str(round(aeg, 2)) + " sekundit", True, teksti_varv), (kastilaius - 330, 740))
 
     if vigade_arv >= 10:
-        win.blit(font.render("Proovi täpsem olla!", True, teksti_varv), (kastilaius - 330, 770))
+        win.blit(font.render("Proovi täpsem olla!", True, teksti_varv), (kastilaius - 330, 780))
 
     return True

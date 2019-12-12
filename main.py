@@ -45,6 +45,9 @@ while True:
             kaivitus = False
 
     if e.type == pg.QUIT:
+        statistika.salvesta_sessioon("alg")
+        statistika.salvesta_sessioon("edasi")
+        statistika.salvesta_sessioon("lopmatu")
         break
     if e.type == pg.MOUSEMOTION:
         hiir = pg.mouse.get_pos()

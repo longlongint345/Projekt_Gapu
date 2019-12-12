@@ -14,7 +14,7 @@ tase = statistika.get_tase("alg")
 kell0 = time.time()
 aeg = 0.1
 ainult_korra = True
-
+tekst = ""
 
 # tagastab igale tähele vastava pildi nime
 def sorm(taht):
@@ -87,11 +87,13 @@ def klahvi_asukoht(k):
 
 
 def kuva(win, wx, wy, hiir, klikk, klahv):
-    global vajutus, kirjutatud_tekst, kirjutamise_jarg, counter, viga, tase, kell0, aeg, ainult_korra
+    global vajutus, kirjutatud_tekst, kirjutamise_jarg, counter, viga, tase, kell0, aeg, ainult_korra, tekst
 
     if ainult_korra:
         vajutus = ""
         win.fill((255, 255, 255))
+        if tase < 20:
+            tekst = file_to_string(os.path.join("data", "algope" + str(tase) + ".txt"))
         # win.blit(pg.image.load(os.path.join("img", "img.jpg")), (0, 0))
         ainult_korra = False
 
@@ -121,11 +123,11 @@ def kuva(win, wx, wy, hiir, klikk, klahv):
     if tase >= 20:
         return True
 
-    tekst = file_to_string(os.path.join("data", "algope" + str(tase) + ".txt"))
-
     if kirjutamise_jarg + 1 >= len(tekst):  # uue teksti laadimine
         tase += 1
         statistika.tase_ules("alg")
+        if tase < 20:
+            tekst = file_to_string(os.path.join("data", "algope" + str(tase) + ".txt"))
         kirjutamise_jarg = -1
         kirjutatud_tekst = ""
 
