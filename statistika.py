@@ -31,7 +31,7 @@ def tase_ules(mooduli_nimi):  # kutsuda välja, kui kasutaja on läbinud mingis 
 def salvesta_sessioon(mooduli_nimi):  # kutsuda välja kui kasutaja vajutab tagasi nuppu (enne muutujate reset'i)
     # ideaalis peaks lisama võimaluse, et see ka X-nuppu vajutades toimuks
     from algope import aeg as aeg_a
-    import edasijoudnud
+    from edasijoudnud import WPM as WPMe, aeg as aeg_e, kirjutatud_sõnad as sonu_e
     from lopmatu import aeg, WPM
     if mooduli_nimi not in ("alg", "edasi", "lopmatu"):
         raise Exception("Funktsioonis salvesta_sessioon sobimatu mooduli nimi.")
@@ -51,7 +51,22 @@ def salvesta_sessioon(mooduli_nimi):  # kutsuda välja kui kasutaja vajutab taga
             f.write(str(aeg_kogu))
 
     elif mooduli_nimi == "edasi":
-        pass
+        with open(os.path.join("data", "edasi_stat.txt"), "r+") as f:
+            data = f.readlines()
+            if not data:
+                # esimesel kohal WPM, siis aeg, siis kirjutatud sõnade arv
+                f.write("0\n0\n0")
+                f.seek(0)
+                data = f.readlines()
+            for x in range(len(data)):
+                data[x] = data[x].strip()
+            f.seek(0)
+            f.truncate()
+            sonu_minutis_kesk = (float(data[0]) + WPMe) / 2
+            aeg_kokku = float(data[1]) + aeg_e
+            sonu_kokku = float(data[2]) + sonu_e
+            f.write(str(sonu_minutis_kesk) + "\n" + str(aeg_kokku) + "\n" + str(sonu_kokku))
+
     elif mooduli_nimi == "lopmatu":
         # fail sisaldab harjutamiseks kulunud aega, üleüldist keskmist WPM'i (vastavalt esimesel ja teisel real)
         with open(os.path.join("data", "lopmatu_stat.txt"), "r+") as f:
@@ -81,7 +96,10 @@ def get_stat(mooduli_nimi):  # tagastab listi koos soovitud andmetega (järjekor
                 x = x.strip()
                 output.append(float(x))
     elif mooduli_nimi == "edasi":
-        pass
+        with open(os.path.join("data", "edasi_stat.txt"), "r") as fsisse:
+            for x in fsisse.readlines():
+                x = x.strip()
+                output.append(float(x))
     elif mooduli_nimi == "lopmatu":
         with open(os.path.join("data", "lopmatu_stat.txt"), "r") as fsisse:
             for x in fsisse.readlines():
@@ -178,9 +196,16 @@ def main_screen(win, wx, wy, hiir, klikk):
     win.blit(font.render("Aeg kokku: " + str(int(get_stat("alg")[0])) + " sekundit", True, varv),
              (wx / 2 - laius / 2 - laius + 10, 360))
     # edasijõudnud kast
-    win.blit(font.render("Tase: " + str(get_tase("alg")), True, varv), (wx / 2 - laius / 2 + 10, 310))
+    win.blit(font.render("Tase: " + str(get_tase("edasi")), True, varv), (wx / 2 - laius / 2 + 10, 310))
+    win.blit(font.render("Keskmine WPM: " + str(round(get_stat("edasi")[0], 2)), True, varv),
+             (wx / 2 - laius / 2 + 10, 360))
+    win.blit(font.render("Aeg kokku: " + str(int(get_stat("edasi")[1])) + " sekundit", True, varv),
+             (wx / 2 - laius / 2 + 10, 410))
+    win.blit(font.render("Sõnu kirjutatud: " + str(int(get_stat("edasi")[2])), True, varv),
+             (wx / 2 - laius / 2 + 10, 460))
     # lõpmatu
-    win.blit(font.render("Tase: " + str(get_tase("lopmatu")), True, varv), (wx / 2 - laius / 2 + laius + 10, 310))
+    win.blit(font.render("Kirjutatud artikleid: " + str(get_tase("lopmatu")), True, varv),
+             (wx / 2 - laius / 2 + laius + 10, 310))
     win.blit(font.render("Keskmine WPM: " + str(round(get_stat("lopmatu")[1], 2)), True, varv),
              (wx / 2 - laius / 2 + laius + 10, 360))
     win.blit(font.render("Aeg kokku: " + str(int(get_stat("lopmatu")[0])) + " sekundit", True, varv),

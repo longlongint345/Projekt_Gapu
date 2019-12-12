@@ -98,6 +98,7 @@ def lopmatu_main(win, winx, winy, hiir, klikk, klahv):
     viki_logo_klikk = nupp(20, winy - 183 - 20, 183, 183, "")
     if tippimiste_arv >= len(tekst) or viki_logo_klikk.is_clicked(klikk, hiir):
         tekst = web_scraper()
+        statistika.tase_ules("lopmatu")
         tippimiste_arv = 0
         kirjutatud_tekst = ""
 

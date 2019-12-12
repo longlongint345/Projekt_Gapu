@@ -72,10 +72,16 @@ def edasijõudnud_main(win, wx, wy, hiir, klikk, klahv):
         tagasi.varv = (255, 0, 140)
     tagasi.draw(win)
     if tagasi.is_clicked(klikk, hiir):
+        statistika.salvesta_sessioon("edasi")
         win.fill((0, 0, 0))
         vajutus = "start"
         kirjutatud_tekst = ""
         kirjutamise_järg = -1
+        kirjutatud_sõnad = 0
+        aeg = 0.1
+        ainult_korra = True
+        WPM = 0
+        vigade_arv = 0
         return False
     
     nihe_nurgast = 40
@@ -112,7 +118,7 @@ def edasijõudnud_main(win, wx, wy, hiir, klikk, klahv):
     win.blit(font.render("WPM: " + str(WPM), True, (255, 255, 255)), (kastilaius - 330, 650))
 
     win.blit(font.render("Vigade arv: " + str(vigade_arv), True, (255, 255, 255)), (kastilaius - 330, 690))
-    win.blit(font.render("Aeg: " + str(aeg) + "sekundit", True, (255, 255, 255)), (kastilaius - 330, 730))
+    win.blit(font.render("Aeg: " + str(round(aeg, 2)) + " sekundit", True, (255, 255, 255)), (kastilaius - 330, 730))
     
     if vigade_arv >= 10:
         win.blit(font.render("Proovi täpsem olla!", True, (255, 255, 255)), (kastilaius - 330, 770))
