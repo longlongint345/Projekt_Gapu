@@ -27,6 +27,7 @@ def edasijoudnud_main(win, wx, wy, hiir, klikk, klahv):
     if ainult_korra:
         kell0 = time.time()
         win.fill((255, 255, 255))
+        vajutus = ""
         if tase <= 10:
             tekst = file_to_string(os.path.join("data", "edasi" + str(tase) + ".txt"))
         ainult_korra = False
